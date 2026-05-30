@@ -18,6 +18,11 @@ from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
+from app.core.constants import (
+    JWT_LIFETIME_SECONDS,
+    MIN_PASSWORD_LENGTH,
+    PASSWORD_LENGTH_ERROR,
+)
 from app.core.db import get_async_session
 from app.models.user import User
 
@@ -34,9 +39,9 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         user: User,
     ) -> None:
         """Проверяет пароль пользователя."""
-        if len(password) < 3:
+        if len(password) < MIN_PASSWORD_LENGTH:
             raise InvalidPasswordException(
-                reason='Password should be at least 3 characters'
+                reason=PASSWORD_LENGTH_ERROR,
             )
 
 
@@ -58,7 +63,7 @@ def get_jwt_strategy() -> JWTStrategy:
     """Возвращает JWT-стратегию."""
     return JWTStrategy(
         secret=settings.secret,
-        lifetime_seconds=3600,
+        lifetime_seconds=JWT_LIFETIME_SECONDS,
     )
 
 

@@ -41,7 +41,7 @@ class CRUDCharityProject(
             .where(CharityProject.fully_invested.is_(False))
             .order_by(CharityProject.create_date)
         )
-        return db_projects.scalars().all()
+        return list(db_projects.scalars().all())
 
 
 charity_project_crud = CRUDCharityProject(CharityProject)

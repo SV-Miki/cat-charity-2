@@ -8,10 +8,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import Base
 
-
-ModelType = TypeVar('ModelType', bound=Base)
-CreateSchemaType = TypeVar('CreateSchemaType', bound=BaseModel)
-UpdateSchemaType = TypeVar('UpdateSchemaType', bound=BaseModel)
+ModelType = TypeVar("ModelType", bound=Base)
+CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
+UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 
 
 class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
@@ -27,10 +26,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         session: AsyncSession,
     ) -> ModelType | None:
         """Получает объект по id."""
-        db_object = await session.execute(
-            select(self.model).where(self.model.id == object_id)
-        )
-        return db_object.scalars().first()
+        return await session.get(self.model, object_id)
 
     async def get_multi(
         self,
@@ -38,7 +34,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     ) -> list[ModelType]:
         """Получает список объектов."""
         db_objects = await session.execute(select(self.model))
-        return db_objects.scalars().all()
+        return list(db_objects.scalars().all())
 
     async def create(
         self,

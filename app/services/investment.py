@@ -1,5 +1,6 @@
 """Сервис распределения пожертвований по целевым проектам."""
 
+from collections.abc import Sequence
 from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -46,8 +47,8 @@ def invest_amount(
 
 
 async def invest_objects(
-    sources: list[InvestmentBaseModel],
-    targets: list[InvestmentBaseModel],
+    sources: Sequence[InvestmentBaseModel],
+    targets: Sequence[InvestmentBaseModel],
     session: AsyncSession,
 ) -> None:
     """Распределяет средства из источников по целевым объектам."""
@@ -60,8 +61,6 @@ async def invest_objects(
                 continue
 
             invest_amount(source, target)
-            session.add(source)
-            session.add(target)
 
     for source in sources:
         session.add(source)

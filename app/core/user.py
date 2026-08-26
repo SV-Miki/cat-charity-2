@@ -1,6 +1,6 @@
 """Настройка пользователей и аутентификации."""
 
-from typing import AsyncGenerator
+from collections.abc import AsyncGenerator
 
 from fastapi import Depends
 from fastapi_users import (
@@ -8,6 +8,7 @@ from fastapi_users import (
     FastAPIUsers,
     IntegerIDMixin,
     InvalidPasswordException,
+    schemas,
 )
 from fastapi_users.authentication import (
     AuthenticationBackend,
@@ -36,7 +37,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     async def validate_password(
         self,
         password: str,
-        user: User,
+        user: schemas.BaseUserCreate | User,
     ) -> None:
         """Проверяет пароль пользователя."""
         if len(password) < MIN_PASSWORD_LENGTH:
@@ -67,10 +68,10 @@ def get_jwt_strategy() -> JWTStrategy:
     )
 
 
-bearer_transport = BearerTransport(tokenUrl='auth/jwt/login')
+bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
 
 auth_backend = AuthenticationBackend(
-    name='jwt',
+    name="jwt",
     transport=bearer_transport,
     get_strategy=get_jwt_strategy,
 )

@@ -6,7 +6,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.crud.charity_project import charity_project_crud
 from app.models.charity_project import CharityProject
 
-
 PROJECT_NAME_EXISTS_ERROR = 'Проект с таким именем уже существует!'
 PROJECT_NOT_FOUND_ERROR = 'Проект не найден!'
 PROJECT_CLOSED_ERROR = 'Закрытый проект нельзя редактировать!'

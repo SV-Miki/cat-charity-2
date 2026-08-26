@@ -10,14 +10,12 @@ from app.core.user import current_superuser, current_user
 from app.crud.charity_project import charity_project_crud
 from app.crud.donation import donation_crud
 from app.models.user import User
-from app.models.donation import Donation
 from app.schemas.donation import (
     DonationCreate,
     DonationDB,
     DonationFullInfoDB,
 )
 from app.services.investment import invest_objects
-
 
 router = APIRouter()
 
@@ -72,13 +70,11 @@ async def create_donation(
     user: Annotated[User, Depends(current_user)],
 ):
     """Создаёт новое пожертвование."""
-    donation_data = donation.model_dump()
-    new_donation = Donation(
-        **donation_data,
+    new_donation = await donation_crud.create_with_user(
+        donation,
         user_id=user.id,
+        session=session,
     )
-    session.add(new_donation)
-    await session.flush()
 
     projects = await charity_project_crud.get_not_fully_invested(session)
 

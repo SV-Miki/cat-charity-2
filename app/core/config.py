@@ -9,9 +9,9 @@ class Settings(BaseSettings):
     app_title: str = 'Благотворительный фонд поддержки котиков QRKot'
     app_description: str = 'Сервис для поддержки котиков'
     database_url: str = 'sqlite+aiosqlite:///./qrkot.db'
-    secret: str = 'SECRET'
+    secret: str
 
     model_config = SettingsConfigDict(env_file='.env')
 
 
-settings = Settings()
+settings = Settings()  # type: ignore[call-arg]

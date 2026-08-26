@@ -18,7 +18,7 @@ async def create_user(
 
     async with AsyncSessionLocal() as session:
         result = await session.execute(
-            select(User).where(User.email == email)
+            select(User).filter_by(email=email)
         )
         user = result.scalars().first()
 

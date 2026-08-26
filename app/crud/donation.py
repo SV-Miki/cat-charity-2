@@ -11,6 +11,22 @@ from app.schemas.donation import DonationCreate
 class CRUDDonation(CRUDBase[Donation, DonationCreate, DonationCreate]):
     """CRUD-класс для пожертвований."""
 
+    async def create_with_user(
+        self,
+        object_in: DonationCreate,
+        user_id: int,
+        session: AsyncSession,
+    ) -> Donation:
+        """Создаёт пожертвование пользователя."""
+        donation_data = object_in.model_dump()
+        db_donation = Donation(
+            **donation_data,
+            user_id=user_id,
+        )
+        session.add(db_donation)
+        await session.flush()
+        return db_donation
+
     async def get_not_fully_invested(
         self,
         session: AsyncSession,
@@ -21,7 +37,7 @@ class CRUDDonation(CRUDBase[Donation, DonationCreate, DonationCreate]):
             .where(Donation.fully_invested.is_(False))
             .order_by(Donation.create_date)
         )
-        return db_donations.scalars().all()
+        return list(db_donations.scalars().all())
 
     async def get_by_user(
         self,
@@ -34,7 +50,7 @@ class CRUDDonation(CRUDBase[Donation, DonationCreate, DonationCreate]):
             .where(Donation.user_id == user_id)
             .order_by(Donation.create_date)
         )
-        return db_donations.scalars().all()
+        return list(db_donations.scalars().all())
 
 
 donation_crud = CRUDDonation(Donation)

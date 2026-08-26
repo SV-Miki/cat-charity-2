@@ -24,7 +24,6 @@ from app.schemas.charity_project import (
 )
 from app.services.investment import close_investment_object, invest_objects
 
-
 router = APIRouter()
 
 

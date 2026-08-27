@@ -43,7 +43,7 @@ QRKot — API-приложение благотворительного фонд
 ## Структура проекта
 
 ```text
-cat-charity-2/
+qrkot/
 ├── alembic/
 │   ├── versions/
 │   ├── env.py
@@ -109,8 +109,8 @@ cat-charity-2/
 ### 1. Клонировать репозиторий
 
 ```bash
-git clone https://github.com/SV-Miki/cat-charity-2.git
-cd cat-charity-2
+git clone git@github.com:SV-Miki/qrkot.git
+cd qrkot
 ```
 
 ### 2. Создать виртуальное окружение
